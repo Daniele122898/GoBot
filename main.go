@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	p "github.com/serenity/GoBot/plugins"
+	"github.com/serenity/GoBot/plugins/misc"
 	"strings"
 	"github.com/serenity/GoBot/helpers/config"
 )
@@ -54,16 +55,14 @@ func main() {
 }
 
 func initializeCommands(){
-	cmds = []p.Command{p.NewPing()}
+	cmds = []p.Command{
+		p.NewPing(),
+		misc.NewStats(),
+		}
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
-	//TODO commandhandler
-	//ignore all messages created by bot itself
-	if m.Author.ID == s.State.User.ID {
-		return
-	}
-	//Ignore other bots
+	//Ignore other bots and self
 	if m.Author.Bot {
 		return
 	}

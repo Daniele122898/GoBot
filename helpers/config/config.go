@@ -16,7 +16,7 @@ const (
 )
 
 var (
-	config configFile
+	config *configFile
 	mutex = &sync.Mutex{}
 )
 
@@ -24,12 +24,12 @@ func getConfig() configFile {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	if config == (configFile{}) { //check if config is "nil"
+	if config == nil { //check if config is "nil"
 		//load config
 		loadConfig()
 	}
 
-	return config
+	return *config
 }
 
 func loadConfig(){

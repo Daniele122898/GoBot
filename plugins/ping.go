@@ -1,6 +1,9 @@
 package plugins
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+	"time"
+)
 
 type ping struct {
 	aliases []string
@@ -17,6 +20,11 @@ func (p ping) GetAliases() []string{
 }
 
 func (ping) Run(cmd string, args []string, msg *discordgo.Message, s *discordgo.Session) (error){
-	_, err := s.ChannelMessageSend(msg.ChannelID, "Pong!")
+	start := time.Now()
+	m, err := s.ChannelMessageSend(msg.ChannelID, "Pong!")
+	if err != nil {
+		return err
+	}
+	_, err = s.ChannelMessageEdit(msg.ChannelID, m.ID, m.Content+" ("+time.Since(start).String()+") :ping_pong:")
 	return err
 }

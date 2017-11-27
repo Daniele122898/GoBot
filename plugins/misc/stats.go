@@ -13,7 +13,7 @@ type stats struct{
 	aliases []string
 }
 
-//get  new ping command.
+//get  new stats command.
 func NewStats() plugins.Command{
 	p := stats{aliases: []string{"sys", "info", "stats"}}
 	return p
@@ -49,7 +49,6 @@ func (stats) Run(cmd string, args []string, msg *discordgo.Message, session *dis
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: session.State.User.AvatarURL("1024"),
 		},
-		Description: "Basic stats about Bunny",
 		Fields: []*discordgo.MessageEmbedField{
 			//System
 			{Name: "GO Version", Value: runtime.Version(), Inline: true},

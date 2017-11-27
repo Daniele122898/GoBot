@@ -9,6 +9,7 @@ import (
 	"github.com/serenity/GoBot/plugins/misc"
 	"strings"
 	"github.com/serenity/GoBot/helpers/config"
+	"github.com/serenity/GoBot/plugins/fun"
 )
 
 var(
@@ -58,6 +59,7 @@ func initializeCommands(){
 	cmds = []p.Command{
 		p.NewPing(),
 		misc.NewStats(),
+		fun.NewSwag(),
 		}
 }
 
@@ -82,7 +84,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
 	for _, cmd := range cmds{
 		for _, a := range cmd.GetAliases(){
 			if a == command {
-				go cmd.Run(command, args, m.Message, s) //run the command
+				//go cmd.Run(command, args, m.Message, s) //run the command
+				go func(){
+					err:= cmd.Run(command, args, m.Message, s)
+					if err != nil {
+						//do error handling
+					}
+				}()
 				f = true
 				break
 			}

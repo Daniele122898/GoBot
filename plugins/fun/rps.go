@@ -1,10 +1,10 @@
 package fun
 
 import (
-	"github.com/serenity/GoBot/plugins"
+	"github.com/Daniele122898/GoBot/plugins"
 	"github.com/bwmarrin/discordgo"
 	"strings"
-	"github.com/serenity/GoBot/helpers/embeds"
+	"github.com/Daniele122898/GoBot/helpers/embeds"
 )
 
 type rps struct {

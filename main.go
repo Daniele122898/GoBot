@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	p "github.com/serenity/GoBot/plugins"
-	"github.com/serenity/GoBot/plugins/misc"
+	p "github.com/Daniele122898/GoBot/plugins"
+	"github.com/Daniele122898/GoBot/plugins/misc"
 	"strings"
-	"github.com/serenity/GoBot/helpers/config"
-	"github.com/serenity/GoBot/plugins/fun"
-	"github.com/serenity/GoBot/helpers/embeds"
+	"github.com/Daniele122898/GoBot/helpers/config"
+	"github.com/Daniele122898/GoBot/plugins/fun"
+	"github.com/Daniele122898/GoBot/plugins/interactions"
+	"github.com/Daniele122898/GoBot/helpers/embeds"
 	"time"
 	"math/rand"
 )
@@ -72,6 +73,7 @@ func initializeCommands(){
 		fun.NewDice(),
 		fun.NewGoogle(),
 		fun.NewRps(),
+		interactions.NewInteract(),
 		}
 }
 

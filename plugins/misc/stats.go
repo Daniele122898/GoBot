@@ -2,10 +2,10 @@ package misc
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/serenity/GoBot/plugins"
+	"github.com/Daniele122898/GoBot/plugins"
 	"runtime"
 	"strconv"
-	"github.com/serenity/GoBot/helpers/embeds"
+	"github.com/Daniele122898/GoBot/helpers/embeds"
 	"github.com/dustin/go-humanize"
 )
 

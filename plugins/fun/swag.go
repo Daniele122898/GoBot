@@ -2,7 +2,7 @@ package fun
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/serenity/GoBot/plugins"
+	"github.com/Daniele122898/GoBot/plugins"
 	"time"
 )
 

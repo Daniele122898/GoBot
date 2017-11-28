@@ -71,6 +71,7 @@ func initializeCommands(){
 		fun.NewEball(),
 		fun.NewDice(),
 		fun.NewGoogle(),
+		fun.NewRps(),
 		}
 }
 

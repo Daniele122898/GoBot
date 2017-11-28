@@ -10,10 +10,9 @@ type swag struct{
 	aliases []string
 }
 
-//get  new stats command.
+//get  new swag command.
 func NewSwag() plugins.Command{
-	p := swag{aliases: []string{"swag"}}
-	return p
+	return swag{aliases: []string{"swag", "lenny"}}
 }
 
 func (s swag) GetAliases() []string{
@@ -21,6 +20,21 @@ func (s swag) GetAliases() []string{
 }
 
 func (swag) Run(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) (error){
+	switch cmd {
+		case "swag":
+			return swaggy(msg, session)
+		case "lenny":
+			return lenny(msg, session)
+	}
+	return nil
+}
+
+func lenny(msg *discordgo.Message, session *discordgo.Session) error{
+	_, err := session.ChannelMessageSend(msg.ChannelID, "( ͡° ͜ʖ ͡°)")
+	return err
+}
+
+func swaggy(msg *discordgo.Message, session *discordgo.Session) error{
 	m, err := session.ChannelMessageSend(msg.ChannelID, "( ͡° ͜ʖ ͡°)>⌐■-■")
 	if err != nil {
 		return err

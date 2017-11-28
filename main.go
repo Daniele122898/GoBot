@@ -10,6 +10,9 @@ import (
 	"strings"
 	"github.com/serenity/GoBot/helpers/config"
 	"github.com/serenity/GoBot/plugins/fun"
+	"github.com/serenity/GoBot/helpers/embeds"
+	"time"
+	"math/rand"
 )
 
 var(
@@ -44,6 +47,10 @@ func main() {
 		os.Exit(2)
 	}
 
+
+	// Make the randomness more random
+	rand.Seed(time.Now().UTC().UnixNano())
+
 	//Wait here until CTRL-C or ither term signal is received
 	fmt.Println("Bot is now running. Press CTRL-C to exit")
 	sc := make(chan os.Signal, 1)
@@ -60,10 +67,15 @@ func initializeCommands(){
 		p.NewPing(),
 		misc.NewStats(),
 		fun.NewSwag(),
+		fun.NewDoor(),
+		fun.NewEball(),
+		fun.NewDice(),
+		fun.NewGoogle(),
 		}
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
+	misc.MsgRec()
 	//Ignore other bots and self
 	if m.Author.Bot {
 		return
@@ -89,7 +101,9 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
 					err:= cmd.Run(command, args, m.Message, s)
 					if err != nil {
 						//do error handling
+						errorHandling(err, s, m)
 					}
+					misc.CmdEx()
 				}()
 				f = true
 				break
@@ -99,6 +113,18 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
 			break
 		}
 	}
+}
 
+func errorHandling(err error, session *discordgo.Session, msg *discordgo.MessageCreate){
+	switch e := err.(type) {
+	case *p.ParameterError:
+		//session.ChannelMessageSend(msg.ChannelID, e.Error())
+		session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.ERR_COLOR,
+			Description: embeds.I_ERR + " "+ e.Error(),
+		})
+	default:
+		session.ChannelMessageSend(msg.ChannelID, "Something broke :/")
+	}
 }
 

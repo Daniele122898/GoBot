@@ -13,10 +13,14 @@ type stats struct{
 	aliases []string
 }
 
+var(
+	messagesReceived = 0
+	commandsExecuted = 0
+)
+
 //get  new stats command.
 func NewStats() plugins.Command{
-	p := stats{aliases: []string{"sys", "info", "stats"}}
-	return p
+	return 	stats{aliases: []string{"sys", "info", "stats"}}
 }
 
 func (p stats) GetAliases() []string{
@@ -65,9 +69,19 @@ func (stats) Run(cmd string, args []string, msg *discordgo.Message, session *dis
 			{Name: "Connected Servers", Value:strconv.Itoa(len(guilds)), Inline:true},
 			{Name: "Watching Channels", Value:strconv.Itoa(channels), Inline:true},
 			{Name: "Users with access", Value:strconv.Itoa(len(users)), Inline:true},
+			{Name: "Messages Received", Value:strconv.Itoa(messagesReceived), Inline:true},
+			{Name: "Commands Executed", Value:strconv.Itoa(commandsExecuted), Inline:true},
 		},
 	})
 	return err
+}
+
+func MsgRec(){
+	messagesReceived++
+}
+
+func CmdEx(){
+	commandsExecuted++
 }
 
 

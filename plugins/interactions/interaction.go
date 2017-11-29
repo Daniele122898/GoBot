@@ -5,6 +5,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/Daniele122898/weeb.go/src"
 	"github.com/Daniele122898/GoBot/helpers/config"
+	"github.com/Daniele122898/weeb.go/src/net"
+	"github.com/Daniele122898/GoBot/helpers/embeds"
 )
 
 type interact struct{
@@ -13,7 +15,7 @@ type interact struct{
 
 //get  new interaction command.
 func NewInteract() plugins.Command{
-	return interact{aliases: []string{"auth", "tags", "types"}}
+	return interact{aliases: []string{"auth", "tags", "types", "pat"}}
 }
 
 func (i interact) GetAliases() []string{
@@ -24,16 +26,32 @@ func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *
 	var err error
 	switch cmd {
 	case "auth":
-		err = auth(cmd, args, msg, session)
+		err = auth(msg, session)
 	case "tags":
-		err = tags(cmd, args,msg, session)
+		err = tags(msg, session)
 	case "types":
-		err = types(cmd, args, msg, session)
+		err = types(msg, session)
+	case "pat":
+		err = pat(msg, session)
 	}
 	return err
 }
 
-func auth(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) (error){
+func pat(msg *discordgo.Message, session *discordgo.Session) error{
+	d, err := weebgo.GetRandomImage("pat", nil, net.GIF, net.FALSE, false)
+	if err!=nil{
+		return err
+	}
+	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+		Color: embeds.DEFAULT_COLOR,
+		Image: &discordgo.MessageEmbedImage{
+			URL:d.Url,
+		},
+	})
+	return err
+}
+
+func auth(msg *discordgo.Message, session *discordgo.Session) (error){
 	err := weebgo.Authenticate(config.Get().Weeb)
 	if err == nil {
 		_, err = session.ChannelMessageSend(msg.ChannelID, "Successfully authenticated")
@@ -42,7 +60,7 @@ func auth(cmd string, args []string, msg *discordgo.Message, session *discordgo.
 	return err
 }
 
-func tags(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) (error){
+func tags(msg *discordgo.Message, session *discordgo.Session) (error){
 	td, err := weebgo.GetTags(false)
 	if err != nil{
 		return err
@@ -55,7 +73,7 @@ func tags(cmd string, args []string, msg *discordgo.Message, session *discordgo.
 	return err
 }
 
-func types(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) (error){
+func types(msg *discordgo.Message, session *discordgo.Session) (error){
 	td, err := weebgo.GetTypes(false)
 	if err != nil{
 		return err

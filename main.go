@@ -127,7 +127,7 @@ func errorHandling(err error, session *discordgo.Session, msg *discordgo.Message
 			Description: embeds.I_ERR + " "+ e.Error(),
 		})
 	default:
-		session.ChannelMessageSend(msg.ChannelID, "Something broke :/")
+		session.ChannelMessageSend(msg.ChannelID, "Something broke :/\n```\n"+e.Error()+"\n```")
 	}
 }
 

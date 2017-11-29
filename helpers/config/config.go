@@ -8,7 +8,8 @@ import (
 )
 
 type configFile struct {
-	Token string
+	Token string `json:token`
+	Weeb string `json:weeb`
 }
 
 const (

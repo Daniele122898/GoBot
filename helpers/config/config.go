@@ -10,6 +10,7 @@ import (
 type configFile struct {
 	Token string `json:token`
 	Weeb string `json:weeb`
+	Owner string `json:owner`
 }
 
 const (

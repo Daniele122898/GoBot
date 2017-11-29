@@ -7,6 +7,8 @@ import (
 	"github.com/Daniele122898/GoBot/helpers/config"
 	"github.com/Daniele122898/weeb.go/src/net"
 	"github.com/Daniele122898/GoBot/helpers/embeds"
+	"github.com/Daniele122898/GoBot/helpers"
+	"strings"
 )
 
 type interact struct{
@@ -25,8 +27,6 @@ func (i interact) GetAliases() []string{
 func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) (error){
 	var err error
 	switch cmd {
-	case "auth":
-		err = auth(msg, session)
 	case "tags":
 		err = tags(msg, session)
 	case "types":
@@ -38,12 +38,43 @@ func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *
 }
 
 func pat(msg *discordgo.Message, session *discordgo.Session) error{
+	if msg.Mentions == nil || len(msg.Mentions) == 0{
+		return &plugins.ParameterError{"Mention at least one user!"}
+	}
+
+	m := helpers.RemoveDuplicateUsers(msg.Mentions)
+
+	//check for selfpat
+	if len(m) == 1 && m[0].ID == msg.Author.ID {
+		_, err := session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.DEFAULT_COLOR,
+			Title:helpers.GiveUserAndDiscrim(m[0])+", why are you patting yourself? Are you okay? ｡ﾟ･（>﹏<）･ﾟ｡",
+			Image: &discordgo.MessageEmbedImage{
+				URL:"https://i.imgur.com/QFtH3Gl.gif",
+			},
+		})
+		return err
+	}
+
 	d, err := weebgo.GetRandomImage("pat", nil, net.GIF, net.FALSE, false)
 	if err!=nil{
 		return err
 	}
+
+	//Get list of patted users
+	patted :=""
+	for _, u := range m {
+		patted+= helpers.GiveUserAndDiscrim(u)+", "
+	}
+	patted = strings.TrimRight(patted, ", ")
+
+	if len(patted) > 220{
+		patted = patted[:220]+"..."
+	}
+
 	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
 		Color: embeds.DEFAULT_COLOR,
+		Title: helpers.GiveUserAndDiscrim(msg.Author)+" pats "+patted+ "  ｡◕ ‿ ◕｡",
 		Image: &discordgo.MessageEmbedImage{
 			URL:d.Url,
 		},
@@ -51,16 +82,19 @@ func pat(msg *discordgo.Message, session *discordgo.Session) error{
 	return err
 }
 
-func auth(msg *discordgo.Message, session *discordgo.Session) (error){
+func Auth() (error){
 	err := weebgo.Authenticate(config.Get().Weeb)
 	if err == nil {
-		_, err = session.ChannelMessageSend(msg.ChannelID, "Successfully authenticated")
 		return err
 	}
 	return err
 }
 
 func tags(msg *discordgo.Message, session *discordgo.Session) (error){
+	//check if owner
+	if msg.Author.ID != config.Get().Owner {
+		return &plugins.PermissionError{"This command may only be used by the owner."}
+	}
 	td, err := weebgo.GetTags(false)
 	if err != nil{
 		return err
@@ -74,6 +108,10 @@ func tags(msg *discordgo.Message, session *discordgo.Session) (error){
 }
 
 func types(msg *discordgo.Message, session *discordgo.Session) (error){
+	//check if owner
+	if msg.Author.ID != config.Get().Owner {
+		return &plugins.PermissionError{"This command may only be used by the owner."}
+	}
 	td, err := weebgo.GetTypes(false)
 	if err != nil{
 		return err

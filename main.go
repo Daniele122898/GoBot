@@ -37,6 +37,9 @@ func main() {
 	//addallCommandsTocommandList
 	initializeCommands()
 
+	//Authenticate Wolke API
+	interactions.Auth()
+
 	//Register the messagecreate func as callback
 	// for MessageCreate events
 	dg.AddHandler(messageCreate)
@@ -122,6 +125,11 @@ func errorHandling(err error, session *discordgo.Session, msg *discordgo.Message
 	switch e := err.(type) {
 	case *p.ParameterError:
 		//session.ChannelMessageSend(msg.ChannelID, e.Error())
+		session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.ERR_COLOR,
+			Description: embeds.I_ERR + " "+ e.Error(),
+		})
+	case *p.PermissionError:
 		session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
 			Color: embeds.ERR_COLOR,
 			Description: embeds.I_ERR + " "+ e.Error(),

@@ -11,7 +11,6 @@ import (
 	"strings"
 	"github.com/Daniele122898/weeb.go/src/data"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 )
 
 type interact struct{

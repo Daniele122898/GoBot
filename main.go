@@ -68,6 +68,7 @@ func initializeCommands(){
 		fun.NewGoogle(),
 		fun.NewRps(),
 		interactions.NewInteract(),
+		misc.NewMisc(),
 		}
 }
 

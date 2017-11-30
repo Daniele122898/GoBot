@@ -13,7 +13,7 @@ type rps struct {
 
 //get  new rps command.
 func NewRps() plugins.Command{
-	return 	rps{aliases: []string{"rps", "rockpaperscissor"}}
+	return 	&rps{aliases: []string{"rps", "rockpaperscissor"}}
 }
 
 func (r rps) GetAliases() []string {

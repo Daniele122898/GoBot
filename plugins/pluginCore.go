@@ -4,7 +4,7 @@ import "github.com/bwmarrin/discordgo"
 
 type Command interface {
 	GetAliases() []string
-	Run(string, []string, *discordgo.Message, *discordgo.Session) (error)
+	Run(string, []string, *discordgo.Message, *discordgo.Session) error
 }
 
 type ParameterError struct{

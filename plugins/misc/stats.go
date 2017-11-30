@@ -20,7 +20,7 @@ var(
 
 //get  new stats command.
 func NewStats() plugins.Command{
-	return 	stats{aliases: []string{"sys", "info", "stats"}}
+	return 	&stats{aliases: []string{"sys", "info", "stats"}}
 }
 
 func (p stats) GetAliases() []string{

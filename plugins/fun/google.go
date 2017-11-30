@@ -14,7 +14,7 @@ type google struct{
 
 //get  new google command.
 func NewGoogle() plugins.Command{
-	return 	google{aliases: []string{"google"}}
+	return 	&google{aliases: []string{"google"}}
 }
 
 func (g google) GetAliases() []string {

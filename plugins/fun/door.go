@@ -12,7 +12,7 @@ type door struct {
 
 //get  new door command.
 func NewDoor() plugins.Command{
-	return	door{aliases: []string{"door"}}
+	return	&door{aliases: []string{"door"}}
 }
 
 func (d door) GetAliases() []string{

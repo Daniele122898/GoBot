@@ -11,7 +11,7 @@ type ping struct {
 
 //get  new ping command.
 func NewPing() Command{
-	return 	ping{aliases: []string{"ping"}}
+	return 	&ping{aliases: []string{"ping"}}
 }
 
 func (p ping) GetAliases() []string{

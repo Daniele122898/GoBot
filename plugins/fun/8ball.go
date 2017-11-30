@@ -38,7 +38,7 @@ var (
 
 //get  new 8ball command.
 func NewEball() plugins.Command{
-	return eball{aliases: []string{"8b", "8ball"}}
+	return &eball{aliases: []string{"8b", "8ball"}}
 }
 
 func (b eball) GetAliases() []string{

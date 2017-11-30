@@ -14,7 +14,7 @@ type dice struct {
 
 //get  new diceroll command.
 func NewDice() plugins.Command{
-	return dice{aliases: []string{"roll", "dice", "rolldice"}}
+	return &dice{aliases: []string{"roll", "dice", "rolldice"}}
 }
 
 func (d dice) GetAliases() []string{

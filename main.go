@@ -33,37 +33,28 @@ func main() {
 		fmt.Println("Error creating Discord session: ", err)
 		os.Exit(1)
 	}
-
 	//addallCommandsTocommandList
 	initializeCommands()
-
 	//Authenticate Wolke API
 	interactions.Auth()
-
 	//Register the messagecreate func as callback
 	// for MessageCreate events
 	dg.AddHandler(messageCreate)
-
 	//open a websocket connection to discord and behin listening
 	err = dg.Open()
 	if err != nil {
 		fmt.Println("Error opening connection", err)
 		os.Exit(2)
 	}
-
-
 	// Make the randomness more random
 	rand.Seed(time.Now().UTC().UnixNano())
-
 	//Wait here until CTRL-C or ither term signal is received
 	fmt.Println("Bot is now running. Press CTRL-C to exit")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, os.Interrupt, os.Kill)
 	<- sc //blocks
-
 	//cleanly close down the discord session
 	dg.Close()
-
 }
 
 func initializeCommands(){
@@ -86,17 +77,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
 	if m.Author.Bot {
 		return
 	}
-
 	//if prefix isn't there, return
 	if !strings.HasPrefix(m.Content, prefix) {
 		return
 	}
-
 	args := strings.Split(m.Content, " ") //extract args
 	command := strings.ToLower(args[0])//seperate command from arg list
 	args = args[1:] //remove command from arg list
 	command = strings.TrimLeft(command, "b!") //remove prefix
-
 	//Try to match command
 	f := false
 	for _, cmd := range cmds{

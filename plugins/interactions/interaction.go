@@ -17,14 +17,14 @@ type interact struct{
 
 //get  new interaction command.
 func NewInteract() plugins.Command{
-	return interact{aliases: []string{"tags", "types", "pat", "hug", "kiss", "slap"}}
+	return &interact{aliases: []string{"tags", "types", "pat", "hug", "kiss", "slap", "highfive", "cuddle", "lick", "poke"}}
 }
 
 func (i interact) GetAliases() []string{
 	return i.aliases
 }
 
-func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) (error){
+func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *discordgo.Session) error {
 	var err error
 	switch cmd {
 	case "tags":
@@ -39,7 +39,55 @@ func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *
 		err = kiss(msg, session)
 	case "slap":
 		err = slap(msg, session)
+	case "highfive":
+	case "cuddle":
+	case "lick":
+	case "poke":
+
 	}
+	return err
+}
+//highfive, cuddle, lick, poke
+
+func highfive(msg *discordgo.Message, session *discordgo.Session) error {
+	if msg.Mentions == nil || len(msg.Mentions) == 0{
+		return &plugins.ParameterError{"Mention at least one user!"}
+	}
+
+	m := helpers.RemoveDuplicateUsers(msg.Mentions)
+
+	//check for self high5
+	if len(m) == 1 && m[0].ID == msg.Author.ID {
+		_, err := session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.WARN_COLOR,
+			Title:embeds.I_WARN +" " + helpers.GiveUserAndDiscrim(m[0])+" you may pat yourself or hug a pillow but kissing yourself is too much (๑•﹏•)",
+		})
+		return err
+	}
+
+	d, err := weebgo.GetRandomImage("kiss", nil, net.GIF, net.FALSE, false)
+	if err!=nil{
+		return err
+	}
+
+	//Get list of patted users
+	patted :=""
+	for _, u := range m {
+		patted+= helpers.GiveUserAndDiscrim(u)+", "
+	}
+	patted = strings.TrimRight(patted, ", ")
+
+	if len(patted) > 220{
+		patted = patted[:220]+"..."
+	}
+
+	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+		Color: embeds.DEFAULT_COLOR,
+		Title: helpers.GiveUserAndDiscrim(msg.Author)+" kissed "+patted+ "  (✿ ♥‿♥)♥",
+		Image: &discordgo.MessageEmbedImage{
+			URL:d.Url,
+		},
+	})
 	return err
 }
 
@@ -241,7 +289,7 @@ func tags(msg *discordgo.Message, session *discordgo.Session) (error){
 	for _, s := range td.Tags {
 		out += s+", "
 	}
-	_, err = session.ChannelMessageSend(msg.ChannelID, "```\n"+out+"\n```")
+	_, err = session.ChannelMessageSend(msg.ChannelID, "```\n"+out[:len(out)-2]+"\n```")
 	return err
 }
 
@@ -258,6 +306,6 @@ func types(msg *discordgo.Message, session *discordgo.Session) (error){
 	for _, s := range td.Types {
 		out += s+", "
 	}
-	_, err = session.ChannelMessageSend(msg.ChannelID, "```\n"+out+"\n```")
+	_, err = session.ChannelMessageSend(msg.ChannelID, "```\n"+out[:len(out)-2]+"\n```")
 	return err
 }

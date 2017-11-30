@@ -12,7 +12,7 @@ type swag struct{
 
 //get  new swag command.
 func NewSwag() plugins.Command{
-	return swag{aliases: []string{"swag", "lenny"}}
+	return &swag{aliases: []string{"swag", "lenny"}}
 }
 
 func (s swag) GetAliases() []string{

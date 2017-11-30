@@ -17,7 +17,7 @@ type interact struct{
 
 //get  new interaction command.
 func NewInteract() plugins.Command{
-	return interact{aliases: []string{"auth", "tags", "types", "pat"}}
+	return interact{aliases: []string{"tags", "types", "pat", "hug", "kiss", "slap"}}
 }
 
 func (i interact) GetAliases() []string{
@@ -33,7 +33,100 @@ func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *
 		err = types(msg, session)
 	case "pat":
 		err = pat(msg, session)
+	case "hug":
+		err = hug(msg, session)
+	case "kiss":
+		err = kiss(msg, session)
+	case "slap":
+		err = slap(msg, session)
 	}
+	return err
+}
+
+func kiss(msg *discordgo.Message, session *discordgo.Session) error{
+	if msg.Mentions == nil || len(msg.Mentions) == 0{
+		return &plugins.ParameterError{"Mention at least one user!"}
+	}
+
+	m := helpers.RemoveDuplicateUsers(msg.Mentions)
+
+	//check for self kiss
+	if len(m) == 1 && m[0].ID == msg.Author.ID {
+		_, err := session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.WARN_COLOR,
+			Title:embeds.I_WARN +" " + helpers.GiveUserAndDiscrim(m[0])+" you may pat yourself or hug a pillow but kissing yourself is too much (๑•﹏•)",
+		})
+		return err
+	}
+
+	d, err := weebgo.GetRandomImage("kiss", nil, net.GIF, net.FALSE, false)
+	if err!=nil{
+		return err
+	}
+
+	//Get list of patted users
+	patted :=""
+	for _, u := range m {
+		patted+= helpers.GiveUserAndDiscrim(u)+", "
+	}
+	patted = strings.TrimRight(patted, ", ")
+
+	if len(patted) > 220{
+		patted = patted[:220]+"..."
+	}
+
+	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+		Color: embeds.DEFAULT_COLOR,
+		Title: helpers.GiveUserAndDiscrim(msg.Author)+" kissed "+patted+ "  (✿ ♥‿♥)♥",
+		Image: &discordgo.MessageEmbedImage{
+			URL:d.Url,
+		},
+	})
+	return err
+}
+
+func slap(msg *discordgo.Message, session *discordgo.Session) error{
+	if msg.Mentions == nil || len(msg.Mentions) == 0{
+		return &plugins.ParameterError{"Mention at least one user!"}
+	}
+
+	m := helpers.RemoveDuplicateUsers(msg.Mentions)
+
+	//check for self slap
+	if len(m) == 1 && m[0].ID == msg.Author.ID {
+		_, err := session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.WARN_COLOR,
+			Title:embeds.I_WARN +" " + helpers.GiveUserAndDiscrim(m[0])+" why would you slap yourself... Are you okay? 〣( ºΔº )〣",
+			Image: &discordgo.MessageEmbedImage{
+				URL:"https://media.giphy.com/media/Okk9cb1dvtMxq/giphy.gif",
+			},
+		})
+		return err
+	}
+
+	d, err := weebgo.GetRandomImage("slap", nil, net.GIF, net.FALSE, false)
+	if err!=nil{
+		return err
+	}
+
+	//Get list of patted users
+	patted :=""
+	for _, u := range m {
+		patted+= helpers.GiveUserAndDiscrim(u)+", "
+	}
+	patted = strings.TrimRight(patted, ", ")
+
+	if len(patted) > 220{
+		patted = patted[:220]+"..."
+	}
+
+	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+		Color: embeds.DEFAULT_COLOR,
+		Title: helpers.GiveUserAndDiscrim(msg.Author)+" slaps "+patted+ "  (ᗒᗩᗕ)՞",
+		Image: &discordgo.MessageEmbedImage{
+			URL:d.Url,
+		},
+	})
 	return err
 }
 
@@ -75,6 +168,51 @@ func pat(msg *discordgo.Message, session *discordgo.Session) error{
 	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
 		Color: embeds.DEFAULT_COLOR,
 		Title: helpers.GiveUserAndDiscrim(msg.Author)+" pats "+patted+ "  ｡◕ ‿ ◕｡",
+		Image: &discordgo.MessageEmbedImage{
+			URL:d.Url,
+		},
+	})
+	return err
+}
+
+func hug(msg *discordgo.Message, session *discordgo.Session) error {
+	if msg.Mentions == nil || len(msg.Mentions) == 0{
+		return &plugins.ParameterError{"Mention at least one user!"}
+	}
+
+	m := helpers.RemoveDuplicateUsers(msg.Mentions)
+
+	//check for selfpat
+	if len(m) == 1 && m[0].ID == msg.Author.ID {
+		_, err := session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+			Color: embeds.DEFAULT_COLOR,
+			Title:helpers.GiveUserAndDiscrim(m[0])+" don't hug yourself ;-; At least take this pillow (̂ ˃̥̥̥ ˑ̫ ˂̥̥̥ )̂ ",
+			Image: &discordgo.MessageEmbedImage{
+				URL:"http://i.imgur.com/CM0of.gif",
+			},
+		})
+		return err
+	}
+
+	d, err := weebgo.GetRandomImage("hug", nil, net.GIF, net.FALSE, false)
+	if err!=nil{
+		return err
+	}
+
+	//Get list of hugged users
+	hugged :=""
+	for _, u := range m {
+		hugged+= helpers.GiveUserAndDiscrim(u)+", "
+	}
+	hugged = strings.TrimRight(hugged, ", ")
+
+	if len(hugged) > 220{
+		hugged= hugged[:220]+"..."
+	}
+
+	_, err = session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
+		Color: embeds.DEFAULT_COLOR,
+		Title: helpers.GiveUserAndDiscrim(msg.Author)+" hugs "+hugged+ "  °˖✧◝(⁰▿⁰)◜✧˖°",
 		Image: &discordgo.MessageEmbedImage{
 			URL:d.Url,
 		},

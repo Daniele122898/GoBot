@@ -33,10 +33,10 @@ func main() {
 		fmt.Println("Error creating Discord session: ", err)
 		os.Exit(1)
 	}
-	//addallCommandsTocommandList
-	initializeCommands()
 	//Authenticate Wolke API
 	interactions.Auth()
+	//addallCommandsTocommandList
+	initializeCommands()
 	//Register the messagecreate func as callback
 	// for MessageCreate events
 	dg.AddHandler(messageCreate)
@@ -85,6 +85,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
 	command := strings.ToLower(args[0])//seperate command from arg list
 	args = args[1:] //remove command from arg list
 	command = strings.TrimLeft(command, "b!") //remove prefix
+	command = strings.TrimRight(command, " ") //remove extra space if its there
 	//Try to match command
 	f := false
 	for _, cmd := range cmds{

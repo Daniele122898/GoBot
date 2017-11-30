@@ -84,8 +84,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){
 	args := strings.Split(m.Content, " ") //extract args
 	command := strings.ToLower(args[0])//seperate command from arg list
 	args = args[1:] //remove command from arg list
-	command = strings.TrimLeft(command, "b!") //remove prefix
-	command = strings.TrimRight(command, " ") //remove extra space if its there
+	command = strings.TrimPrefix(command, "b!") //remove prefix
+	command = strings.TrimSuffix(command, " ") //remove extra space if its there
 	//Try to match command
 	f := false
 	for _, cmd := range cmds{

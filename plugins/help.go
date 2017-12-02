@@ -22,7 +22,7 @@ func (h help) GetAliases() []string{
 	return h.aliases
 }
 
-func (help) RegisterCommands(cmds []Command){
+func RegisterCommands(cmds []Command){
 	commands = cmds
 }
 

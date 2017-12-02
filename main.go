@@ -59,7 +59,6 @@ func main() {
 
 func initializeCommands(){
 	//initialize help
-	h:= p.NewHelp()
 	cmds = []p.Command{
 		p.NewPing(),
 		misc.NewStats(),
@@ -71,9 +70,10 @@ func initializeCommands(){
 		fun.NewRps(),
 		interactions.NewInteract(),
 		misc.NewMisc(),
-		h,
+		p.NewHelp(),
 		}
-
+	//register all commands in the help
+	p.RegisterCommands(cmds)
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate){

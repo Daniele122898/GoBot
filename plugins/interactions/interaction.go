@@ -5,7 +5,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/Daniele122898/weeb.go/src"
 	"github.com/Daniele122898/GoBot/helpers/config"
-	"github.com/Daniele122898/weeb.go/src/net"
 	"github.com/Daniele122898/GoBot/helpers/embeds"
 	"github.com/Daniele122898/GoBot/helpers"
 	"strings"
@@ -68,7 +67,7 @@ func (interact) Run(cmd string, args []string, msg *discordgo.Message, session *
 }
 
 func defaultInter(cmd string, msg *discordgo.Message, session *discordgo.Session) error{
-	d, err := weebgo.GetRandomImage(cmd, nil, net.ANY, net.FALSE, false)
+	d, err := weebgo.GetRandomImage(cmd, nil, data.ANY, data.FALSE, false)
 	if err!=nil{
 		session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
 			Color: embeds.ERR_COLOR,
@@ -122,7 +121,7 @@ func lick(msg *discordgo.Message, session *discordgo.Session) error{
 }
 
 func inter(typ, inter, emoji string, m []*discordgo.User, msg *discordgo.Message, session *discordgo.Session) error {
-	d, err := weebgo.GetRandomImage(typ, nil, net.GIF, net.FALSE, false)
+	d, err := weebgo.GetRandomImage(typ, nil, data.GIF, data.FALSE, false)
 	if err!=nil{
 		session.ChannelMessageSendEmbed(msg.ChannelID, &discordgo.MessageEmbed{
 			Color: embeds.ERR_COLOR,
@@ -279,7 +278,7 @@ func hug(msg *discordgo.Message, session *discordgo.Session) error {
 }
 
 func Auth() (error){
-	err := weebgo.Authenticate(config.Get().Weeb)
+	err := weebgo.Authenticate(config.Get().Weeb, data.BEARER)
 	if err == nil {
 		return err
 	}
